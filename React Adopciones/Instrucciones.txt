@@ -1,0 +1,31 @@
+1. Instalar Node.js y npm
+
+Ve al sitio oficial de Node.js (https://nodejs.org/en) y descarga la versión recomendada (LTS).
+Ejecuta el instalador y sigue las instrucciones en pantalla.
+Verificar la instalación:
+
+Abre una terminal o símbolo del sistema.
+Escribe node -v para verificar la instalación de Node.js.
+Escribe npm -v para verificar la instalación de npm.
+
+2. Instalar dependencias del backend y frontend
+
+a. Instalar dependencias del backend:
+Navegar a la carpeta del backend:
+cd backend
+
+Instalar dependencias:
+npm install
+
+b. Instalar dependencias del frontend:
+Navegar a la carpeta animal-adoption
+
+Instalar dependencias:
+npm install
+
+3. Entren a la carpeta animal-adoption
+4. Abran una consola y ejecuten 
+cd backend
+node index.js
+5. Abran otra consola y ejecuten
+npm start
