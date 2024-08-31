@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
+import logo from '../images/logo.png';
 
 function NavBar({ onSearch , isAuthenticated}) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,9 +12,20 @@ function NavBar({ onSearch , isAuthenticated}) {
   };
 
   return (
-    <Navbar bg="primary" variant="dark" expand="lg">
+    <Navbar className="custom-navbar" expand="lg">
       <Container>
-        <Navbar.Brand as={Link} to="/">Find your friend</Navbar.Brand>
+      <Navbar.Brand as={Link} to="/">
+          <img
+            src={logo}
+            alt="Logo"
+            width="50" // Ajusta el tamaño del logo
+            height="50"
+            style={{margin:0,padding:0}} // Ajusta el tamaño del logo
+          />
+        </Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">
+          <h3 style={{marginTop:10}}>Find your friend</h3>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

@@ -17,7 +17,7 @@ function App() {
 
   return (
     <Router>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' } } >
         <NavBar  isAuthenticated={isAuthenticated} onSearch={handleSearch} />
         <div style={{ flex: 1 }}>
           <Routes>

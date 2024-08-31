@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 function Footer() {
   return (
-    <footer className="bg-primary text-light mt-5">
+    <footer className="custom-navbar">
       <Container>
         <Row>
           <Col className="text-center">

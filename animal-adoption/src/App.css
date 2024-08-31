@@ -56,3 +56,31 @@ button {
   margin-top: 20px;
   font-size: 18px;
 }
+
+.Navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.Navbar-brand img {
+  margin-right: 10px; /* Espacio entre el logo y el texto */
+  height: 40px; /* Ajusta la altura del logo */
+}
+
+.nav-link {
+  color: white !important; /* Asegúrate de que los enlaces sean blancos */
+}
+
+.nav-link:hover {
+  color: #61dafb !important; /* Color al pasar el ratón */
+}
+
+.form-control {
+  border-radius: 20px; /* Bordes redondeados para el campo de búsqueda */
+}
+
+.button-search {
+  border-radius: 20px; /* Bordes redondeados para el botón de búsqueda */
+  background-color: #61dafb; /* Color de fondo del botón */
+  color: #282c34; /* Color del texto en el botón */
+}
