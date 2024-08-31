@@ -27,7 +27,7 @@ function Login({setIsAuthenticated}) {
         setIsAuthenticated(true);
         // Si el login es exitoso, redirige o guarda el token
         console.log(response.data); // Aquí podrías guardar un token o manejar la respuesta como necesites
-        navigate('/dashboard'); // Redirigir al usuario al dashboard o a la página deseada
+        navigate('/'); // Redirigir al usuario al dashboard o a la página deseada
       } catch (error) {
         setIsAuthenticated(false);
         setError('Credenciales inválidas. Por favor, intenta de nuevo.');

@@ -12,7 +12,7 @@ function Logout({ setIsAuthenticated }) {
     setIsAuthenticated(false);
 
     // Redirige al usuario a la página de inicio de sesión o a otra página
-    navigate('/');    
+    navigate('/');  
   };
 }
 
