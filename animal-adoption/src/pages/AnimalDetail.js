@@ -18,7 +18,11 @@ function AnimalDetail() {
   return (
     <Container className="mt-4">
       <Card>
-        <Card.Img variant="top" src={animal.image} />
+      <Card.Img 
+                variant="top" 
+                src={animal.image || (animal.imageFile && `http://localhost:4000${animal.imageFile}`)} 
+                alt={animal.name}
+              />
         <Card.Body>
           <Card.Title>{animal.name}</Card.Title>
           <Card.Text>{animal.description}</Card.Text>

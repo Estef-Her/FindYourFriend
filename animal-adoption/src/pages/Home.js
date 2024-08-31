@@ -34,10 +34,15 @@ function Home({ searchTerm }) {
         {filteredAnimals.map(animal => (
           <Col md={4} key={animal.id}>
             <Card className="mb-4">
-              <Card.Img variant="top" src={animal.image} />
+              <Card.Img 
+                variant="top" 
+                src={animal.image || (animal.imageFile && `http://localhost:4000${animal.imageFile}`)} 
+                alt={animal.name}
+              />
               <Card.Body>
                 <Card.Title>{animal.name}</Card.Title>
                 <Card.Text>{animal.description}</Card.Text>
+                <Card.Text>{animal.raza}</Card.Text>
                 <Button as={Link} to={`/animal/${animal.id}`} variant="primary">View Details</Button>
               </Card.Body>
             </Card>

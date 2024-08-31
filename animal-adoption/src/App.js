@@ -4,7 +4,6 @@ import Home from './pages/Home';
 import AnimalDetail from './pages/AnimalDetail';
 import PublishAnimal from './pages/PublishAnimal';
 import NavBar from './components/NavBar';
-
 function App() {
   const [searchTerm, setSearchTerm] = React.useState('');
 
