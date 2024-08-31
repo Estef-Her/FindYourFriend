@@ -19,7 +19,7 @@ function NavBar({ onSearch , isAuthenticated}) {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Inicio</Nav.Link>
             {isAuthenticated && <Nav.Link as={Link} to="/publicar">Publicar</Nav.Link>}
-            {!isAuthenticated && <Nav.Link as={Link} to="/login">Inicial Sesión</Nav.Link>}
+            {!isAuthenticated && <Nav.Link as={Link} to="/login">Iniciar Sesión</Nav.Link>}
             {isAuthenticated && <Nav.Link as={Link} to="/logout">Cerrar Sesión</Nav.Link>}
           </Nav>
           <Form className="d-flex" onSubmit={handleSearch}>
