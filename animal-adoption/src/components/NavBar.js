@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
 
-function NavBar({ onSearch }) {
+function NavBar({ onSearch , isAuthenticated}) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (event) => {
@@ -18,7 +18,9 @@ function NavBar({ onSearch }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Inicio</Nav.Link>
-            <Nav.Link as={Link} to="/publicar">Publicar</Nav.Link>
+            {isAuthenticated && <Nav.Link as={Link} to="/publicar">Publicar</Nav.Link>}
+            {!isAuthenticated && <Nav.Link as={Link} to="/login">Iniciar Sesión</Nav.Link>}
+            {isAuthenticated && <Nav.Link as={Link} to="/logout">Cerrar Sesión</Nav.Link>}
           </Nav>
           <Form className="d-flex" onSubmit={handleSearch}>
             <FormControl

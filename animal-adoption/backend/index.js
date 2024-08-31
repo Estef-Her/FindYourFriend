@@ -70,6 +70,33 @@ app.post('/animals', upload.single('imageFile'), (req, res) => {
   res.json(newAnimal);
 });
 
+// Datos de ejemplo para usuarios (en un entorno real usarías una base de datos)
+const users = [
+  { id: 1, email: 'user1@example.com', password: 'password123' },
+  { id: 2, email: 'user2@example.com', password: 'mypassword' },
+];
+
+// Ruta de login
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  
+  // Verificar si el usuario existe
+  const user = users.find(u => u.email === email && u.password === password);
+
+  if (user) {
+    // Simulando la generación de un token (en un entorno real usarías JWT u otra técnica)
+    res.json({ message: 'Login successful', userId: user.id });
+  } else {
+    res.status(401).json({ message: 'Invalid email or password' });
+  }
+});
+
+app.post('/logout', (req, res) => {
+  // Aquí puedes implementar la lógica para invalidar la sesión del usuario
+  // Por ejemplo, eliminar tokens de sesión, etc.
+  res.status(200).send('Logout successful');
+});
+
 // Configurar la carpeta de archivos estáticos para las imágenes subidas
 app.use('/uploads', express.static('uploads'));
 
