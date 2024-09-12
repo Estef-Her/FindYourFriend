@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button,Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -21,8 +21,9 @@ function PublishAnimal() {
   const [predictions, setPredictions] = useState([]);
   const [imageFile, setImageFile] = useState(null);
   const [raza, setRaza] = useState(''); // Estado para la raza
+  const [loading, setLoading] = useState(false); 
 
-  const URL = "https://teachablemachine.withgoogle.com/models/_36Cov_zp/";
+  const URL = "https://teachablemachine.withgoogle.com/models/lS3pHIPWc/";
 
   // Cargar el modelo al montar el componente
   useEffect(() => {
@@ -50,6 +51,8 @@ function PublishAnimal() {
       formData.append('name', values.name);
       formData.append('description', values.description);
       formData.append('raza', raza); // Incluir raza en el FormData
+      const user = JSON.parse(localStorage.getItem('user'));
+      formData.append('usuario', user.id);
       
       // Si hay un archivo, agregarlo
       if (imageFile) {
@@ -62,7 +65,7 @@ function PublishAnimal() {
       if (values.image) {
         formData.append('image', values.image);
       }
-  
+      // Obtener el token de autenticación
       axios.post('http://localhost:4000/animals', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -118,6 +121,7 @@ function PublishAnimal() {
 }
   // Manejar la selección de archivo
   const handleFileChange = (event) => {
+    setLoading(true); // Inicia la carga
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -154,13 +158,14 @@ function PublishAnimal() {
         // setPredictions(filteredPredictions);
         setRaza(razaS);
         formik.setFieldValue('raza', razaS);
+        setLoading(false);
       };
     }
   };
 
   return (
     <Container className="mt-4">
-      <h2>Publicar</h2>
+      <h4>Publicar</h4>
       <Form onSubmit={formik.handleSubmit}>
         <Form.Group controlId="name">
           <Form.Label>Nombre</Form.Label>
@@ -241,8 +246,15 @@ function PublishAnimal() {
             ))}
           </div>
         )} */}
-
-        <Button variant="primary" type="submit" className="mt-3">
+{loading && (
+          <div className="mt-3">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Procesando...</span>
+            </Spinner>
+            <p>Espere procesando...</p>
+          </div>
+        )}
+        <Button variant="primary" type="submit" className="mt-3" disabled={loading}>
           Publicar
         </Button>
       </Form>

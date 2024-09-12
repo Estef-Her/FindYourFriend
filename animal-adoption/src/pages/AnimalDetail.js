@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate  } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Card } from 'react-bootstrap';
+import { Container, Card,Button  } from 'react-bootstrap';
 
 function AnimalDetail() {
   const { id } = useParams();
   const [animal, setAnimal] = useState(null);
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   useEffect(() => {
     axios.get(`http://localhost:4000/animals/${id}`)
@@ -26,6 +27,9 @@ function AnimalDetail() {
         <Card.Body>
           <Card.Title>{animal.name}</Card.Title>
           <Card.Text>{animal.description}</Card.Text>
+          <Button variant="secondary" onClick={() => navigate(-1)} className="mt-3">
+            Regresar
+          </Button>
         </Card.Body>
       </Card>
     </Container>

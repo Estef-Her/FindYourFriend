@@ -24,6 +24,9 @@ function Login({setIsAuthenticated}) {
     onSubmit: async (values) => {
       try {
         const response = await axios.post('http://localhost:4000/login', values);
+        const { token, user } = response.data; // Supongamos que el backend devuelve un token y los detalles del usuario
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
         // Si el login es exitoso, redirige o guarda el token
         console.log(response.data); // Aquí podrías guardar un token o manejar la respuesta como necesites

@@ -22,7 +22,8 @@ function Home({ searchTerm }) {
     } else {
       const filtered = animals.filter(animal =>
         animal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        animal.description.toLowerCase().includes(searchTerm.toLowerCase())
+        animal.description.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        animal.raza.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredAnimals(filtered);
     }
@@ -43,7 +44,8 @@ function Home({ searchTerm }) {
                 <Card.Title>{animal.name}</Card.Title>
                 <Card.Text>{animal.description}</Card.Text>
                 <Card.Text>{animal.raza}</Card.Text>
-                <Button as={Link} to={`/animal/${animal.id}`} variant="primary">View Details</Button>
+                <Card.Text>{'Publicado por ' +animal.nombreUsuario}</Card.Text>
+                <Button as={Link} to={`/animal/${animal.id}`} variant="primary">Ver detalle</Button>
               </Card.Body>
             </Card>
           </Col>

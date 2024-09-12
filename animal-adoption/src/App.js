@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import AnimalDetail from './pages/AnimalDetail';
 import PublishAnimal from './pages/PublishAnimal';
+import MisPublicaciones from './pages/MisPublicaciones';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import Login from './pages/Login';
@@ -24,6 +25,7 @@ function App() {
             <Route path="/" element={<Home searchTerm={searchTerm} />} />
             <Route path="/animal/:id" element={<AnimalDetail />} />
             <Route path="/publicar" element={<PublishAnimal />} />
+            <Route path="/publicaciones" element={<MisPublicaciones />} />
             <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>} />
             <Route path="/logout" element={<Logout setIsAuthenticated={setIsAuthenticated}/>} />
           </Routes>
