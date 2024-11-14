@@ -26,13 +26,12 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router basename="/FindYourFriend">
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' } } >
         <NavBar  isAuthenticated={isAuthenticated} onSearch={handleSearch} onSearchImg={handleSearchImg} />
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Home searchTerm={searchTerm} searchImg={searchImg} />} />
-            <Route path="/FindYourFriend" element={<Home searchTerm={searchTerm} searchImg={searchImg} />} />
             <Route path="/animal/:id" element={<AnimalDetail />} />
             <Route path="/publicar" element={<PublishAnimal />} />
             <Route path="/modificarAnimal/:id" element={<ModificarAnimal />} />

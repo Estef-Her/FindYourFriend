@@ -29,3 +29,6 @@ cd backend
 node index.js
 5. Abran otra consola y ejecuten
 npm start
+
+
+//Prueba rara
