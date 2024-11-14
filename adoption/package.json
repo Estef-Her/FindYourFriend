@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://Estef-Her.github.io/FindYourFriend",
+  "exclude": "node_modules",
   "repository": {
     "type": "git",
     "url": "https://github.com/Estef-Her/FindYourFriend.git"
