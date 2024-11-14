@@ -1,9 +1,0 @@
-title: "My Jekyll Site"
-description: "A simple description of my Jekyll site"
-author: "Your Name"
-baseurl: ""
-url: ""
-theme: "jekyll-theme-primer"
-source: adoption
-exclude:
-  - "node_modules"
