@@ -32,7 +32,6 @@ function App() {
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Home searchTerm={searchTerm} searchImg={searchImg} />} />
-            <Route path="/FindYourFriend" element={<Home searchTerm={searchTerm} searchImg={searchImg} />} />
             <Route path="/animal/:id" element={<AnimalDetail />} />
             <Route path="/publicar" element={<PublishAnimal />} />
             <Route path="/modificarAnimal/:id" element={<ModificarAnimal />} />
