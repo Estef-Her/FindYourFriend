@@ -6,52 +6,88 @@ import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import * as tmImage from '@teachablemachine/image';
 import imageCompression from 'browser-image-compression';
+import TeacheableMachine from '../Clases/TeacheableMachine';
+import LoaderComponent from 'components/Loader';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const TeacheableMachineInstance = new TeacheableMachine();
 
 // Esquema de validación de Yup
 const validationSchema = yup.object().shape({
   name: yup.string().required('El nombre es requerido'),
   description: yup.string().required('La descripción es requerida'),
   raza:yup.string().required('La raza es requerida'),
+  edad: yup.number()
+    .typeError('La edad debe ser un número')
+    .required('La edad es obligatoria')
+    .positive('La edad debe ser un número positivo')
+    .integer('La edad debe ser un número entero'),
+  ubicacion: yup.string().required('La ubicación es requerida'),
+  tamano: yup.string().required('El tamaño es requerido'),
+  contacto: yup.string()
+    .matches(/^[0-9]+$/, "Solo se permiten números") // Asegura que solo sean números
+    .length(8, "El número debe tener exactamente 8 dígitos") // Valida que tenga exactamente 8 dígitos
+    .required("El número de teléfono es obligatorio"),
+  estadoAdopcion: yup.string().required('El estado de adopción es requerido'),
   image: yup.string().url('Invalid URL'),
 });
 
 function PublishAnimal() {
   const navigate = useNavigate();
-  const [model, setModel] = useState(null);
   const [predictions, setPredictions] = useState([]);
   const [imageFile, setImageFile] = useState(null);
-  const [raza, setRaza] = useState(''); // Estado para la raza
+  const [raza, setRaza] = useState([]); // Estado para la raza
+  const [razaString, setRazaString] = useState(""); // Estado para la raza
   const [loading, setLoading] = useState(false); 
+  const [catalogoRazas, setCatalogoRazas] = useState([]); // Estado para la raza
 
   const URL = "https://teachablemachine.withgoogle.com/models/lS3pHIPWc/";
 
   // Cargar el modelo al montar el componente
+  // useEffect(() => {
+  //   const loadModel = async () => {
+  //     const modelURL = URL + "model.json";
+  //     const metadataURL = URL + "metadata.json";
+
+  //     const loadedModel = await tmImage.load(modelURL, metadataURL);
+  //     setModel(loadedModel);
+  //   };
+
+  //   loadModel();
+  // }, []);
   useEffect(() => {
-    const loadModel = async () => {
-      const modelURL = URL + "model.json";
-      const metadataURL = URL + "metadata.json";
-
-      const loadedModel = await tmImage.load(modelURL, metadataURL);
-      setModel(loadedModel);
-    };
-
-    loadModel();
+    axios.get('http://localhost:4000/razas')
+      .then(response => {
+        setCatalogoRazas(response.data);
+      })
+      .catch(error => console.error(error));
   }, []);
-
   const formik = useFormik({
     initialValues: {
       name: '',
       description: '',
       raza: '',
+      edad: '',
+      ubicacion: '',
+      tamano: '',
+      contacto: '',
+      estadoAdopcion: '',
       image: '', // Para la URL de la imagen
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('description', values.description);
-      formData.append('raza', raza); // Incluir raza en el FormData
       const user = JSON.parse(localStorage.getItem('user'));
+      const formData = new FormData();
+      formData.append('nombre', values.name);
+      formData.append('descripcion', values.description);
+      formData.append('edad', parseInt(values.edad,10));
+      formData.append('razas', JSON.stringify(raza));
+      // formData.append('razas', raza); // Incluir raza en el FormData
+      formData.append('ubicacion', values.ubicacion);
+      formData.append('tamano', parseInt(values.tamano,10));
+      formData.append('contacto', values.contacto);
+      formData.append('estadoAdopcion', parseInt(values.estadoAdopcion,10));
       formData.append('usuario', user.id);
       
       // Si hay un archivo, agregarlo
@@ -61,10 +97,10 @@ function PublishAnimal() {
         formData.append('imageFile', file);
       }
   
-      // Si hay una URL de imagen, agregarla
-      if (values.image) {
-        formData.append('image', values.image);
-      }
+      // // Si hay una URL de imagen, agregarla
+      // if (values.image) {
+      //   formData.append('image', values.image);
+      // }
       // Obtener el token de autenticación
       axios.post('http://localhost:4000/animals', formData, {
         headers: {
@@ -73,7 +109,10 @@ function PublishAnimal() {
       })
       .then(response => {
         console.log(response.data);
-        navigate('/');
+        toast.success('El perro ha sido guardado exitosamente!'); // Mostrar mensaje emergente
+        setTimeout(() => {
+          navigate('/'); // Redirigir después de mostrar el mensaje
+        }, 3000); // Esperar 3 segundos antes de redirigir
       })
       .catch(error => {
         console.error('Error uploading file:', error);
@@ -134,30 +173,29 @@ function PublishAnimal() {
   };
   // Validar la imagen con el modelo de Teachable Machine
   const validateImage = async (imageSrc) => {
-    if (model && imageSrc) {
+    if (TeacheableMachineInstance.getModel() && imageSrc) {
       const imgElement = document.createElement("img");
       imgElement.src = imageSrc;
       imgElement.onload = async () => {
-        const prediction = await model.predict(imgElement);
+        const prediction = await TeacheableMachineInstance.getModel().predict(imgElement);
         // Filtra solo las predicciones con más de 0% de probabilidad
-        var razaS = "";
+        var razaS = [];
+        var razaSS = "";
         prediction.forEach((pred) => {
-          if (Math.round(pred.probability * 100) > 0) {
-            razaS += (razaS !== "" ? ", " : "") + pred.className;
+          var prob = Math.round(pred.probability * 100);
+          if (prob > 0) {
+            var razaInCatalogo = catalogoRazas.find(r=>r.nombre===pred.className);
+            razaS.push({
+              nombre:pred.className,
+              probabilidad: prob,
+              id:razaInCatalogo !== null && razaInCatalogo !== undefined ? razaInCatalogo.id : 0
+            });
+            razaSS += (razaSS !== "" ? ", " : "") + pred.className;
           }
         });
-
-        // Muestra las predicciones filtradas
-        // filteredPredictions.forEach((prediction) => {
-        //   console.log(
-        //     `${prediction.className}: ${Math.round(
-        //       prediction.probability * 100
-        //     )}%`
-        //   );
-        // });
-        // setPredictions(filteredPredictions);
         setRaza(razaS);
-        formik.setFieldValue('raza', razaS);
+        setRazaString(razaSS);
+        formik.setFieldValue('raza', razaSS);
         setLoading(false);
       };
     }
@@ -197,6 +235,22 @@ function PublishAnimal() {
             {formik.errors.description}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group controlId="edad" className="mt-3">
+          <Form.Label>Edad</Form.Label>
+          <Form.Control
+            as="input"
+            type='number'
+            rows={3}
+            placeholder="Edad"
+            value={formik.values.edad}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.edad && formik.errors.edad}
+          />
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.edad}
+          </Form.Control.Feedback>
+        </Form.Group>
         <Form.Group controlId="raza" className="mt-3">
           <Form.Label>Raza</Form.Label>
           <Form.Control
@@ -212,6 +266,75 @@ function PublishAnimal() {
             {formik.errors.raza}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group controlId="ubicacion" className="mt-3">
+          <Form.Label>Ubicación</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Ubicación"
+            value={formik.values.ubicacion}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.ubicacion && formik.errors.ubicacion}
+          />
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.ubicacion}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="tamano" className="mt-3">
+          <Form.Label>Tamaño</Form.Label>
+          <Form.Select
+            value={formik.values.tamano}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.tamano && formik.errors.tamano}
+          >
+            <option value="0">Seleccione un tamaño</option>
+            <option value="1">Pequeño</option>
+            <option value="2">Mediano</option>
+            <option value="3">Grande</option>
+            <option value="4">Muy Grande</option>
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.tamano}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group controlId="contacto" className="mt-3">
+          <Form.Label>Teléfono</Form.Label>
+          <Form.Control
+          type="tel" // Permite el ingreso de números
+          placeholder="Teléfono"
+          value={formik.values.contacto}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          isInvalid={formik.touched.contacto && formik.errors.contacto}
+          inputMode="numeric" // Asegura el teclado numérico en dispositivos móviles
+        />
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.contacto}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+     {/* Combo para Estado de Adopción */}
+     <Form.Group controlId="estadoAdopcion" className="mt-3">
+          <Form.Label>Estado</Form.Label>
+          <Form.Select
+            value={formik.values.estadoAdopcion}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.estadoAdopcion && formik.errors.estadoAdopcion}
+          >
+            <option value="0">Seleccione el estado</option>
+            <option value="1">En adopción</option>
+            <option value="2">Adoptado</option>
+            <option value="3">Perdido</option>
+            <option value="4">Encontrado</option>
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.estadoAdopcion}
+          </Form.Control.Feedback>
+        </Form.Group>
+
         {/* <Form.Group controlId="image" className="mt-3">
           <Form.Label>URL de Imagen</Form.Label>
           <Form.Control
@@ -227,7 +350,7 @@ function PublishAnimal() {
           </Form.Control.Feedback>
         </Form.Group> */}
 
-        <Form.Group controlId="imageFile" className="mt-3">
+        <Form.Group controlId="foto" className="mt-3">
           <Form.Label>Selecciona una imagen:</Form.Label>
           <Form.Control
             type="file"
@@ -247,17 +370,13 @@ function PublishAnimal() {
           </div>
         )} */}
 {loading && (
-          <div className="mt-3">
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Procesando...</span>
-            </Spinner>
-            <p>Espere procesando...</p>
-          </div>
+  <LoaderComponent/>
         )}
         <Button variant="primary" type="submit" className="mt-3" disabled={loading}>
           Publicar
         </Button>
       </Form>
+      <ToastContainer />
     </Container>
   );
 }

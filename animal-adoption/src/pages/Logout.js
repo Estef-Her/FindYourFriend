@@ -5,22 +5,36 @@ import React, { useEffect } from 'react';
 function Logout({ setIsAuthenticated }) {
   const navigate = useNavigate();
 
-  
   const handleLogout = async () => {
-    await axios.post('http://localhost:4000/logout');
-    
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    
-    // Limpia el estado de autenticación
-    setIsAuthenticated(false);
+    try {
+      const token = localStorage.getItem('tokenn'); // Asegúrate de que coincida con el nombre correcto
 
-    // Redirige al usuario a la página de inicio de sesión o a otra página
-    navigate('/login');
+      // Enviar el token como parte de los encabezados en la solicitud
+      await axios.post(
+        'http://localhost:4000/logout', 
+        {}, // No necesitas enviar datos en el cuerpo
+        { headers: { Authorization: `Bearer ${token}` } } // Enviar el token en los headers
+      );
+
+      // Limpiar almacenamiento local después del logout exitoso
+      localStorage.removeItem('tokenn');
+      localStorage.removeItem('user');
+
+      // Actualizar el estado de autenticación
+      setIsAuthenticated(false);
+
+      // Redirigir al usuario
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
-  React.useEffect(() => {
+
+  useEffect(() => {
     handleLogout();
   }, []);
+
+  return null; // Puedes retornar null ya que este componente solo se encarga del logout
 }
 
 export default Logout;

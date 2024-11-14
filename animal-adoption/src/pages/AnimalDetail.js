@@ -18,15 +18,24 @@ function AnimalDetail() {
 
   return (
     <Container className="mt-4">
-      <Card>
+      <Card className="animal-card-detail">
+      <div className="card-img-wrapper-detail">
       <Card.Img 
                 variant="top" 
-                src={animal.image || (animal.imageFile && `http://localhost:4000${animal.imageFile}`)} 
-                alt={animal.name}
+                src={animal.foto} 
+                alt={animal.nombre}
+                className="card-img-detail"
               />
+              </div>
         <Card.Body>
-          <Card.Title>{animal.name}</Card.Title>
-          <Card.Text>{animal.description}</Card.Text>
+          <Card.Title>{animal.nombre}</Card.Title>
+          <Card.Text>{animal.descripcion}</Card.Text>
+          <Card.Text>{animal.edad} años</Card.Text>
+          <Card.Text className="animal-breed">
+                  Raza: {animal.razas.length > 0 ? animal.razas.map(raza => raza.nombre).join(', ') : "Raza no asignada"}
+                </Card.Text>
+          <Card.Text>Contactarse con {animal.contacto}</Card.Text>
+          <Card.Text>Publicado por {animal.nombreUsuario}</Card.Text>
           <Button variant="secondary" onClick={() => navigate(-1)} className="mt-3">
             Regresar
           </Button>
