@@ -18,12 +18,12 @@ Instalar dependencias:
 npm install
 
 b. Instalar dependencias del frontend:
-Navegar a la carpeta animal-adoption
+Navegar a la carpeta adoption
 
 Instalar dependencias:
 npm install
 
-3. Entren a la carpeta animal-adoption
+3. Entren a la carpeta adoption
 4. Abran una consola y ejecuten 
 cd backend
 node index.js
