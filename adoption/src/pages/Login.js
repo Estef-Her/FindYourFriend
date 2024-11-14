@@ -15,6 +15,7 @@ const validationSchema = yup.object().shape({
 function Login({ setIsAuthenticated }) {
   const [error, setError] = React.useState('');
   const navigate = useNavigate();
+const [user, setUser]=React.useState(null);
 
   const formik = useFormik({
     initialValues: {
