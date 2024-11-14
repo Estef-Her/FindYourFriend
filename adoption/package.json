@@ -2,7 +2,7 @@
   "name": "adoption",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://estef-her.github.io/FindYourFriend",
+  "homepage": "https://estef-her.github.io/FindYourFriend/adoption/src/index.js",
   "exclude": "node_modules",
   "repository": {
     "type": "git",
